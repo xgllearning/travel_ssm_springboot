@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heima.travel.mapper.RouteMapper">
+    <!--TODO: rflag表示数据库该条数据是否有效，为1时有效，通过order by count desc降序排序，count是人气 -->
+    <select id="popularityRoutes" resultType="Route">
+        select * from tab_route where rflag='1' order by count desc
+    </select>
+    <!--查询日期rdate是最新的前4-->
+    <select id="newRoutes" resultType="Route">
+        select * from tab_route where rflag='1' order by rdate desc
+    </select>
+    <!--TODO:查询是旅游主题且最新的前4，isThemeTour是char类型，所以需要单引号='1'-->
+    <select id="themesRoutes" resultType="Route">
+        select * from tab_route where rflag='1' and isThemeTour='1' order by rdate desc
+    </select>
+</mapper>
