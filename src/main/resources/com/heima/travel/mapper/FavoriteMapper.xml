@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heima.travel.mapper.FavoriteMapper">
+
+    <select id="isFavoriteByRid" resultType="Favorite">
+        select * from tab_favorite where uid=#{uid} and rid=#{rid}
+    </select>
+    <!-- count(*)表是查询到的数据有几行，返回值为int类型，根据用户id和路线rid进行查询是否存在数据，存在说明该用户收藏了该路线-->
+    <select id="countFavorite" resultType="int">
+        select count(*) from tab_favorite where uid=#{uid} and rid=#{rid}
+    </select>
+</mapper>
