@@ -5,12 +5,14 @@ import com.heima.travel.service.UserService;
 import com.heima.travel.vo.ResultInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 
 
 /**
@@ -40,5 +42,21 @@ public class UserController {
         ResultInfo result = this.userService.registerUser(user, sessionCheckCode, check);
         //返回结果，如果session中验证码和用户输入的验证码一致则成功注册，并将结果返回给前台
         return result;
+    }
+    //不建议将web层的api引入service层的方法入参中
+    //    @GetMapping("/active")
+    //    public void activeUser(String code,HttpServletResponse response){
+    //        this.userService.activeUser(code, response );
+    //    }
+
+    /**
+     * 激活用户
+     * @param code
+     * @throws IOException
+     */
+    @GetMapping("/active")
+    public void activeUser(String code) throws IOException {
+        //点击验证邮件后，code与携带的code名一样会自动赋值，然后调用service层activeUser方法进行code对比，跟数据库中的code一致后会更新status，由N->Y
+        this.userService.activeUser(code);
     }
 }

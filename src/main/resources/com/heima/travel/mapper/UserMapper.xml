@@ -12,7 +12,7 @@
         insert into tab_user values(null,#{username},#{password},#{name},#{birthday},
                                     #{sex},#{telephone},#{email},#{status},#{code})
     </insert>
-
+    <!--进行更新激活状态，根据code查找激活-->
     <update id="activeUser">
         update tab_user set status='Y' where code=#{code}
     </update>

@@ -49,7 +49,7 @@ public class ValidateController {
         //RandomStringUtils是org.apache.commons.langs提供，randomAlphanumeric(int)有数字有字母，并可指定长度
         String checkCode = RandomStringUtils.randomAlphanumeric(5);
 //将随机的验证码放入HttpSession中，并起个名字，取的时候需要根据name取
-        request.getSession().setAttribute("CHECKCODE_SERVER", checkCode);
+        request.getSession().setAttribute("CHECK_CODE", checkCode);
 
         //设置画笔颜色为黄色，因为之前图片背景是灰色，所以不能相同，需要给随机码设置个颜色，以便能够显示在图片上
         g.setColor(Color.YELLOW);

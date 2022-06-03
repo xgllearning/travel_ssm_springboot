@@ -8,7 +8,7 @@ import java.util.Properties;
 
 /**
  * 发送邮件工具类
- */
+		 */
 public final class MailUtil {
 	private MailUtil(){}
 	/**
@@ -24,16 +24,16 @@ public final class MailUtil {
 		//创建第三方邮箱登录时的认证对象
 		Authenticator auth = new Authenticator() {
 			public PasswordAuthentication getPasswordAuthentication() {
-				return new PasswordAuthentication("fjcllz666@163.com", "IHUWTYUUVRHSFPYH");
+				return new PasswordAuthentication("xx34029067@163.com", "RXANCQLJWDPQXKAK");
 			}
 		};
 		Session session = Session.getInstance(props, auth);
 		//2_创建一封邮件
 		Message message = new MimeMessage(session);
 		try {
-			//设置邮箱发送到地址
-			message.setFrom(new InternetAddress("fjcllz666@163.com"));
-			//设置接收信息的邮箱地址
+			//设置邮箱发送的地址，即发送者
+			message.setFrom(new InternetAddress("xx34029067@163.com"));
+			//设置接收信息的邮箱地址，即接收者
 			message.setRecipient(RecipientType.TO, new InternetAddress(toEmail));
 			//设置邮箱的主题
 			message.setSubject("用户激活");
@@ -49,7 +49,7 @@ public final class MailUtil {
 	 * 测试类
 	 */
 	public static void main(String[] args) throws Exception{
-		String toEmail = "460354532@qq.com";
+		String toEmail = "34029067@qq.com";
 		String emailMsg = "测试一下";
 		sendMail(toEmail,emailMsg);
 		System.out.println("发送成功。。。");

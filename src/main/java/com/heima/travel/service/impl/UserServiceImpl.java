@@ -4,6 +4,7 @@ import com.heima.travel.mapper.UserMapper;
 import com.heima.travel.pojo.User;
 import com.heima.travel.service.UserService;
 
+import com.heima.travel.utils.MailUtil;
 import com.heima.travel.utils.Md5Util;
 import com.heima.travel.utils.UuidUtil;
 import com.heima.travel.vo.ResultInfo;
@@ -12,12 +13,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
-
-
-
-
-
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 
 /**
@@ -82,8 +83,26 @@ public class UserServiceImpl implements UserService {
         //4.往数据库插入用户信息，通过dao层进行处理
         this.userMapper.insertUser(user);
 
-        //5.发送邮箱TODO：
-
-        return new ResultInfo(true, null, null);
+        //5.发送邮箱
+        //5.1 设置正文,到时点击一下会通过get拼接字符串形式将激活码携带给后台，/user/active方法？code参数
+        String content="<a href='http://localhost:8080/user/active?code="+activeCode+"'>点击激活</a>";
+        //5.2 发送邮箱
+        MailUtil.sendMail(user.getEmail(),content);
+        return new ResultInfo(true,null,null);
+    }
+    @Override
+    public void activeUser(String code) throws IOException {
+        //1.激活用户,本质其实是更新status，返回影响行数
+        Integer count= this.userMapper.activeUser(code);
+        if (count>0) {
+            //如果受影响行数大于0，说明激活成功。此时需要资源跳转login.html页面下(一般情况下，是response.redirect重定向到)
+            //此时因为没有传过来参数response，使用RequestContextHolder获取，该参数可以获取response\request\session等各种域，功能强大
+            RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
+            HttpServletResponse response = ((ServletRequestAttributes)requestAttributes).getResponse();
+            response.sendRedirect("/login.html");
+        }else{
+            //抛出异常，激活失败，交给全局异常处理
+            throw new RuntimeException("邮箱激活失败！");
+        }
     }
 }
