@@ -1,9 +1,11 @@
 package com.heima.travel.service.impl;
 
 import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.heima.travel.mapper.RouteMapper;
 import com.heima.travel.pojo.Route;
 import com.heima.travel.service.RouteService;
+import com.heima.travel.vo.PageBean;
 import com.heima.travel.vo.ResultInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -41,5 +43,26 @@ public class RouteServiceImpl implements RouteService {
         data.put("popularity", popularityRoutes);
         data.put("themes", themesRoutes);
         return new ResultInfo(true, data, null);
+    }
+
+    @Override
+    public ResultInfo findRouteList(Integer cid, Integer curPage, String rname) {
+        //会使用到分页技术，因此使用分页api-PageHelper参数一：当前页码，从哪一页开始显示，参数二每页显示条数
+        PageHelper.startPage(curPage,8);
+        //分类cid,rname模糊查询
+        List<Route> routes= this.routeMapper.findRouteList(cid,rname);
+        //查询到的List，对其进行处理，使用com.github.pagehelper包装得到PageInfo对象；
+        //new一个PageInfo-API，传入list集合可以实现包装
+        PageInfo<Route> pageInfo = new PageInfo<>(routes);
+        //因为pageInfo的属性可以自动填充，所以与前台所需要的数据对象不太一致，前台需要的是pageBean对象，所以需要创建一个pageBean并设置pageBean中的各个参数
+        PageBean<Route> pageBean = new PageBean<>();
+        pageBean.setTotalPage(pageInfo.getPages());//总页数
+        pageBean.setPageSize(pageInfo.getPageSize());//每页多少条
+        pageBean.setPrePage(pageInfo.getPrePage());//上一页
+        pageBean.setNextPage(pageInfo.getNextPage());//下一页
+        pageBean.setCurPage(pageInfo.getPageNum());//当前页
+        pageBean.setData(routes);//当前页列表
+        pageBean.setCount(pageInfo.getTotal());//总记录数
+        return new ResultInfo(true,pageBean,null);
     }
 }

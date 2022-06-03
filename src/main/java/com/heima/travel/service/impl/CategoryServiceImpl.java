@@ -11,11 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-/**
- * @author laofang
- * @description
- * @date 2021-06-19
- */
+
 @Service
 @Transactional(propagation = Propagation.SUPPORTS,readOnly = true)
 public class CategoryServiceImpl implements CategoryService {

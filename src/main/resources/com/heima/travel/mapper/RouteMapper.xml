@@ -15,4 +15,17 @@
     <select id="themesRoutes" resultType="Route">
         select * from tab_route where rflag='1' and isThemeTour='1' order by rdate desc
     </select>
+    <!--TODO；通过动态sql的方式实现多条件查询-->
+    <select id="findRouteList" resultType="Route">
+        select * from tab_route
+        <where>
+            rflag='1'
+            <if test="cid!=null and cid!=''">
+                and cid=#{cid}
+            </if>
+            <if test="rname!=null">
+                and rname like concat('%',#{rname},'%')
+            </if>
+        </where>
+    </select>
 </mapper>
