@@ -18,7 +18,8 @@
     </update>
 
     <select id="findUserByUserNameAndPassword" resultType="User">
-        select * from tab_user where username=#{name} and password=#{password}
+        select * from tab_user where status='Y' and username=#{name} and password=#{password}
     </select>
-
 </mapper>
+
+

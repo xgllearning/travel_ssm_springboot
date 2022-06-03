@@ -65,4 +65,15 @@ public class RouteServiceImpl implements RouteService {
         pageBean.setCount(pageInfo.getTotal());//总记录数
         return new ResultInfo(true,pageBean,null);
     }
+
+    @Override
+    public ResultInfo findRouteInfoByRid(Integer rid) {
+        //1.根据旅游路线id查询路线信息
+        Route route= this.routeMapper.findRouteInfoByRid(rid);
+        if (null==route) {
+            //抛异常，抛一个运行时异常交给异常管理器统一处理，异常均在controller层进行处理
+            throw new RuntimeException(rid+"对应的旅游路线不存在");
+        }
+        return new ResultInfo(true,route,null);
+    }
 }

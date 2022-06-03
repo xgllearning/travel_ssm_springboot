@@ -7,4 +7,6 @@ public interface RouteService {
     ResultInfo routeCareChoose();
 
     ResultInfo findRouteList(Integer cid, Integer curPage, String rname);
+
+    ResultInfo findRouteInfoByRid(Integer rid);
 }

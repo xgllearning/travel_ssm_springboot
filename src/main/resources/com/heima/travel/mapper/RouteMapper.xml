@@ -28,4 +28,41 @@
             </if>
         </where>
     </select>
+    <!--定义map映射-->
+    <resultMap id="routeInfoMap" type="Route" autoMapping="true">
+        <!--先进行主表映射,开启自动映射后，如果列名与pojo类中属性名称一致，可自动动映射-->
+        <!--主键映射为id,其余字段为result，column为表字段名，property为实体属性名-->
+        <id column="rid" property="rid"/>
+        <result column="rname" property="rname"/>
+        <!--映射category，此处是从表，一对一association，property为type中一对一的实体属性名->javaType:为property实体对象的具体Java类型-->
+        <association property="category" javaType="Category"  autoMapping="true">
+            <!--主键映射为id,其余字段为result，column为表字段名，property为实体属性名-->
+            <id  column="cid" property="cid"/>
+            <result column="cname" property="cname"/>
+        </association>
+        <!--映射seller，此处是从表，一对一association-->
+        <association property="seller" javaType="Seller" autoMapping="true">
+            <id  column="sid" property="sid"/>
+            <result column="sname" property="sname"/>
+        </association>
+        <!--映射图片集合，此处是从表，一对多collection-->
+        <collection property="routeImgList" javaType="list" ofType="RouteImg" autoMapping="true">
+            <id  column="rgid" property="rgid"/>
+            <result column="bigPic" property="bigPic"/>
+        </collection>
+    </resultMap>
+    <!-- 注意：如果是orm关系映射，即一对一，多对多等，需要使用resultMap,而不是resultType,此时的route中含有category、seller、routeImgList -->
+    <!-- TODO：注意，查询出来的数据，如果字段名有重复，则需要对字段起别名 -->
+    <select id="findRouteInfoByRid" resultMap="routeInfoMap">
+        select * from
+                     tab_route as rt,
+                     tab_seller sl,
+                     tab_category as cg,
+                     tab_route_img as ri
+        where
+            rt.sid = sl.sid
+          and rt.cid = cg.cid
+          and rt.rid = ri.rid
+          and rt.rid = #{rid}
+    </select>
 </mapper>

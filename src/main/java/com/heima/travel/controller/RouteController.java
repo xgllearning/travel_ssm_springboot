@@ -42,4 +42,14 @@ public class RouteController {
         ResultInfo result=this.routeService.findRouteList(cid,curPage,rname);
         return result;
     }
+    /**点击查看详情后，根据线路Rid查询路线的详细信息
+     * 商家表：路线的商家等
+     * 路线表：收藏次数，路线的详细介绍，价格等
+     * 路线图片表：图片等
+     * 路线分类表：分类等
+     * @param rid*/
+    @PostMapping("/findRouteByRid")
+    public ResultInfo findRouteByRid(Integer rid){
+        return this.routeService.findRouteInfoByRid(rid);
+    }
 }
