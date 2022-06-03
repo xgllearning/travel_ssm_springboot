@@ -71,4 +71,11 @@ public class UserController {
         return this.userService.login(username,password,check);
     }
 
+    /**
+     处理用户登录信息的查询，回显登录用户的信息
+     */
+    @PostMapping("/getLoginUserData")
+    public ResultInfo getLoginUserData(){
+        return  this.userService.getLoginUserData();
+    }
 }

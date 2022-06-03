@@ -125,4 +125,17 @@ public class UserServiceImpl implements UserService {
         session.setAttribute("CUR_USER",dbUser);
         return new ResultInfo(true,null,null);
     }
+
+    @Override
+    public ResultInfo getLoginUserData() {
+        RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
+        //获取当前会话的session
+        HttpSession session = ((ServletRequestAttributes) requestAttributes).getRequest().getSession();
+        //获取当前用户信息
+        User curUser = (User) session.getAttribute("CUR_USER");
+        if (curUser==null) {
+            return new ResultInfo(false,"当前用户未登录");
+        }
+        return new ResultInfo(true,curUser,null);
+    }
 }

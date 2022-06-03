@@ -14,4 +14,5 @@ public interface UserService {
 
     ResultInfo login(String username, String password, String check);
 
+    ResultInfo getLoginUserData();
 }
