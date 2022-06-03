@@ -10,6 +10,6 @@ public interface UserMapper {
     void insertUser(User user);
 
     Integer activeUser(@Param("code") String code);
-
+    //TODO：两个参数必须写注解，否则识别不了
     User findUserByUserNameAndPassword(@Param("name") String username,@Param("password") String encodeByMd5);
 }

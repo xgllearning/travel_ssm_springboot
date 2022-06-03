@@ -18,6 +18,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 
@@ -104,5 +105,24 @@ public class UserServiceImpl implements UserService {
             //抛出异常，激活失败，交给全局异常处理
             throw new RuntimeException("邮箱激活失败！");
         }
+    }
+    @Override
+    public ResultInfo login(String username, String password, String check) {
+        //TODO：通过该工具类RequestContextHolder获取session中的数据，需要先强转为ServletRequestAttributes
+        RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
+        //获取当前会话的session，根据名字CHECK_CODE取出session中存放的随机验证码，与用户输入的验证码check进行验证
+        HttpSession session = ((ServletRequestAttributes) requestAttributes).getRequest().getSession();
+        String sessionCheckCode = (String)session.getAttribute("CHECK_CODE");
+        if (check==null || ! check.equalsIgnoreCase(sessionCheckCode)) {
+            return new ResultInfo(false,"验证码错误");
+        }
+        //根据用户和密码查询用户是否存在，注意：需要将用户的密码进行MD5加密，否则无法与数据库中的密码进行匹配
+        User dbUser= this.userMapper.findUserByUserNameAndPassword(username,Md5Util.encodeByMd5(password));
+        if (dbUser==null) {
+            return new ResultInfo(false,"用户名或者密码错误");
+        }
+        //如果用户存在，则将用户的信息保存到session下，登录后可以后续使用当前该用户信息
+        session.setAttribute("CUR_USER",dbUser);
+        return new ResultInfo(true,null,null);
     }
 }

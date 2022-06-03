@@ -59,4 +59,16 @@ public class UserController {
         //点击验证邮件后，code与携带的code名一样会自动赋值，然后调用service层activeUser方法进行code对比，跟数据库中的code一致后会更新status，由N->Y
         this.userService.activeUser(code);
     }
+    /**
+     * 登录功能，根据用户名密码验证码进行验证登录
+     * @param username
+     * @param password
+     * @param check
+     * @return
+     */
+    @PostMapping("/login")
+    public ResultInfo login(String username,String password,String check){
+        return this.userService.login(username,password,check);
+    }
+
 }

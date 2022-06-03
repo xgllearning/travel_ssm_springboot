@@ -11,4 +11,7 @@ public interface UserService {
     ResultInfo registerUser(User user, String sessionCheckCode, String check);
     //创建userService.activeUser方法
     void activeUser(String code) throws IOException;
+
+    ResultInfo login(String username, String password, String check);
+
 }
