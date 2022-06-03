@@ -78,4 +78,20 @@ public class UserController {
     public ResultInfo getLoginUserData(){
         return  this.userService.getLoginUserData();
     }
+   /**
+    * @Author: Guoliang Xu
+    * @Description: TODO
+    * @DateTime: 2022/6/3 16:31
+    * @Params:
+    * @Return
+    */
+    @GetMapping("/loginOut")
+    public void loginOut(){
+        try {
+            this.userService.loginOut();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("退出错误");
+        }
+    }
 }

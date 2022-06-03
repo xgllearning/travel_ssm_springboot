@@ -17,6 +17,7 @@ import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
@@ -137,5 +138,20 @@ public class UserServiceImpl implements UserService {
             return new ResultInfo(false,"当前用户未登录");
         }
         return new ResultInfo(true,curUser,null);
+    }
+
+    @Override
+    public void loginOut() throws IOException {
+        RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
+        ServletRequestAttributes requestAttributes1 = (ServletRequestAttributes) requestAttributes;
+        HttpServletRequest request = requestAttributes1.getRequest();
+        HttpServletResponse response = requestAttributes1.getResponse();
+        HttpSession session = request.getSession();
+        //销毁session中存储的用户信息
+        session.removeAttribute("CUR_USER");
+        //退出后退出原来页面
+        String preUrl = request.getHeader("referer");
+        response.sendRedirect(preUrl);
+
     }
 }
