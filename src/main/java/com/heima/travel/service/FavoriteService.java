@@ -6,4 +6,6 @@ public interface FavoriteService {
     ResultInfo isFavoriteByRid(Integer rid);
 
 
+    ResultInfo addFavorite(Integer rid);
+
 }

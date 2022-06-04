@@ -65,4 +65,12 @@
           and rt.rid = ri.rid
           and rt.rid = #{rid}
     </select>
+
+    <update id="updateCount">
+        update tab_route set count=count+#{count} where rid=#{rid}
+    </update>
+
+    <select id="findCountByRoutId" resultType="int">
+        select count from tab_route where rid=#{rid}
+    </select>
 </mapper>

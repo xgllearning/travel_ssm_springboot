@@ -19,4 +19,13 @@ public class FavoriteController {
     public ResultInfo isFavoriteByRid(Integer rid) {
         return this.favoriteService.isFavoriteByRid(rid);
     }
+    /**
+     * 添加收藏
+     * @param rid
+     * @return
+     */
+    @PostMapping("/addFavorite")
+    public ResultInfo addFavorite(Integer rid){
+        return  this.favoriteService.addFavorite(rid);
+    }
 }

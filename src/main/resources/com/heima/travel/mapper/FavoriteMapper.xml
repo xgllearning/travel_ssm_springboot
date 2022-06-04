@@ -11,4 +11,7 @@
     <select id="countFavorite" resultType="int">
         select count(*) from tab_favorite where uid=#{uid} and rid=#{rid}
     </select>
+    <insert id="addFavorite">
+        insert into tab_favorite values(#{rid},now(),#{uid});
+    </insert>
 </mapper>

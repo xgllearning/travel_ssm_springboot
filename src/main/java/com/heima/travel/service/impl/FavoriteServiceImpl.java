@@ -47,5 +47,30 @@ public class FavoriteServiceImpl implements FavoriteService {
         return new ResultInfo(true,true,null);
     }
 
+    @Override
+    //事务管理增删改需要Propagation.REQUIRED(默认值)，只读为false
+    @Transactional(propagation = Propagation.REQUIRED,readOnly = false)
+    public ResultInfo addFavorite(Integer rid) {
+        //1.获取当前的用户对象
+        //1.从当前session中获取用户信息
+        HttpSession session = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getSession();
+        User curUser = (User) session.getAttribute("CUR_USER");
+        if (null==curUser) {
+            return new ResultInfo(false,0,"用户未登录");
+        }
+        //TODO：添加收藏数据之前需要先查询，确定当前用户是否收藏了对应路线，没有收藏才会往数据库中tab_favorite表中添加rid与uid
+        //因为这俩是联合主键，如果插入的数据与数据库原有数据一致会出现异常
+        Integer count = favoriteMapper.countFavorite(curUser.getUid(), rid);
+        if (count>0) {
+            return new ResultInfo(false,"用户已收藏");
+        }
+        //此时说明用户未收藏该页面，所以向收藏表添加数据,向tab_favorite表中添加rid与uid，增加当前用户收藏该线路的对应关系
+        this.favoriteMapper.addFavorite(curUser.getUid(),rid);
+        //向收藏表添加完数据后，说明用户收藏该线路，需要更新路线的全部收藏数量，在tab_route表中的count+1，传入rid和1代表收藏次数+1
+        this.routeMapper.updateCount(rid,1);
+        //获取旅游路线的最新收藏数量，展示在页面
+        Integer fCount=this.routeMapper.findCountByRoutId(rid);
+        return new ResultInfo(true,fCount,null);
+    }
 
 }

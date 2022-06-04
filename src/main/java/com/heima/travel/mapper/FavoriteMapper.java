@@ -7,4 +7,6 @@ public interface FavoriteMapper {
     Favorite isFavoriteByRid(@Param("uid") int uid, @Param("rid") Integer rid);
 
     Integer countFavorite(@Param("uid") int uid, @Param("rid") Integer rid);
+
+    void addFavorite( @Param("uid") int uid, @Param("rid") Integer rid);
 }
