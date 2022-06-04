@@ -1,5 +1,9 @@
 package com.heima.travel.utils;
 
+import com.heima.travel.exception.BusinessException;
+import com.heima.travel.exception.SystemException;
+import com.heima.travel.vo.Code;
+
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
@@ -42,7 +46,8 @@ public final class MailUtil {
 			//3_发送邮件
 			Transport.send(message);
 		} catch (MessagingException e) {
-			throw new RuntimeException("邮件发送失败");
+			//业务异常: 用户造成的
+			throw new SystemException(Code.SYSTEM_ERR,"发送短信未知异常");
 		}
 	}
 	/**

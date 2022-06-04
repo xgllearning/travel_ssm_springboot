@@ -2,9 +2,11 @@ package com.heima.travel.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.heima.travel.exception.SystemException;
 import com.heima.travel.mapper.RouteMapper;
 import com.heima.travel.pojo.Route;
 import com.heima.travel.service.RouteService;
+import com.heima.travel.vo.Code;
 import com.heima.travel.vo.PageBean;
 import com.heima.travel.vo.ResultInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,7 +75,8 @@ public class RouteServiceImpl implements RouteService {
         Route route= this.routeMapper.findRouteInfoByRid(rid);
         if (null==route) {
             //抛异常，抛一个运行时异常交给异常管理器统一处理，异常均在controller层进行处理
-            throw new RuntimeException(rid+"对应的旅游路线不存在");
+            throw new SystemException(Code.SYSTEM_ERR,"没有查询到该路线信息");
+
         }
         return new ResultInfo(true,route,null);
     }

@@ -16,9 +16,6 @@ import java.io.IOException;
 /**
  *
  * 验证类
- * @author laofang
- * @description
- * @date 2021-06-19
  */
 @Controller
 @RequestMapping("")

@@ -1,5 +1,6 @@
 package com.heima.travel.service.impl;
 
+import com.heima.travel.exception.BusinessException;
 import com.heima.travel.mapper.UserMapper;
 import com.heima.travel.pojo.User;
 import com.heima.travel.service.UserService;
@@ -7,6 +8,7 @@ import com.heima.travel.service.UserService;
 import com.heima.travel.utils.MailUtil;
 import com.heima.travel.utils.Md5Util;
 import com.heima.travel.utils.UuidUtil;
+import com.heima.travel.vo.Code;
 import com.heima.travel.vo.ResultInfo;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,11 +25,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 
-/**
- * @author laofang
- * @description
- * @date 2021-06-19
- */
+
 @Service
 //添加事务，事务正常应该放在service接口层，可以给实现类每个方法进行事务管理
 /**声明式事务
@@ -104,7 +102,7 @@ public class UserServiceImpl implements UserService {
             response.sendRedirect("/login.html");
         }else{
             //抛出异常，激活失败，交给全局异常处理
-            throw new RuntimeException("邮箱激活失败！");
+            throw new BusinessException(Code.BUSINESS_ERR,"激活码不对");
         }
     }
     @Override

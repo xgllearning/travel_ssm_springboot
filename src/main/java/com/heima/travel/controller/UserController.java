@@ -1,7 +1,11 @@
 package com.heima.travel.controller;
 
+
+import com.heima.travel.exception.SystemException;
 import com.heima.travel.pojo.User;
 import com.heima.travel.service.UserService;
+
+import com.heima.travel.vo.Code;
 import com.heima.travel.vo.ResultInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -15,11 +19,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 
-/**
- * @author laofang
- * @description
- * @date 2021-06-19
- */
+
 //注意：@RestController=requestBody+controller
 @RestController
 //异步请求，/user/register
@@ -86,12 +86,13 @@ public class UserController {
     * @Return
     */
     @GetMapping("/loginOut")
-    public void loginOut(){
+    public void loginOut() {
         try {
             this.userService.loginOut();
         } catch (Exception e) {
             e.printStackTrace();
-            throw new RuntimeException("退出错误");
+            //未知异常
+            throw new SystemException(Code.SYSTEM_ERR,"退出登录未知异常");
         }
     }
 }

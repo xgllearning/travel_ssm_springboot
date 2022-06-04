@@ -14,7 +14,8 @@
        http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
 
     <!--配置bean扫描-->
-    <context:component-scan base-package="com.heima.travel.controller"/>
+<!--    <context:component-scan base-package="com.heima.travel.controller"/>-->
+    <context:component-scan base-package="com.heima.travel.controller,com.heima.travel.advice"/>
     <!--配置视图解析器-->
     <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="prefix" value="/WEB-INF/pages/"/>
