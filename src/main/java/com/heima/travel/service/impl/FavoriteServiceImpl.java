@@ -1,18 +1,24 @@
 package com.heima.travel.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.heima.travel.mapper.FavoriteMapper;
 import com.heima.travel.mapper.RouteMapper;
+import com.heima.travel.pojo.Favorite;
 import com.heima.travel.pojo.User;
 import com.heima.travel.service.FavoriteService;
+import com.heima.travel.vo.PageBean;
 import com.heima.travel.vo.ResultInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @Service
 @Transactional(propagation = Propagation.SUPPORTS,readOnly = true)
@@ -72,5 +78,28 @@ public class FavoriteServiceImpl implements FavoriteService {
         Integer fCount=this.routeMapper.findCountByRoutId(rid);
         return new ResultInfo(true,fCount,null);
     }
-
+    @Override
+    public ResultInfo findFavoriteByPage(Integer curPage) {
+        HttpSession session = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getSession();
+        User curUser = (User) session.getAttribute("CUR_USER");
+        if (null==curUser) {
+            return new ResultInfo(false,"用户未登录");
+        }
+        PageHelper.startPage(curPage,12);
+        //TODO：注意此处有bug，因为数据库日期为now().所以如果日期为同一天的话，只能查询出一条数据，修改表结构即可解决
+        List<Favorite> favoriteList= this.favoriteMapper.findFavorites(curUser.getUid());
+        if (CollectionUtils.isEmpty(favoriteList)) {
+            return new ResultInfo(false,"用户未收藏路线");
+        }
+        PageInfo<Favorite> pageInfo = new PageInfo<>(favoriteList);
+        PageBean<Favorite> pageBean = new PageBean<>();
+        pageBean.setTotalPage(pageInfo.getPages());
+        pageBean.setPageSize(pageInfo.getPageSize());
+        pageBean.setPrePage(pageInfo.getPrePage());
+        pageBean.setNextPage(pageInfo.getNextPage());
+        pageBean.setCurPage(pageInfo.getPageNum());
+        pageBean.setData(favoriteList);
+        pageBean.setCount(pageInfo.getTotal());
+        return new ResultInfo(true,pageBean,null);
+    }
 }

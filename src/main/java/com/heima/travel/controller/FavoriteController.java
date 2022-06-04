@@ -5,6 +5,7 @@ import com.heima.travel.vo.ResultInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -27,5 +28,16 @@ public class FavoriteController {
     @PostMapping("/addFavorite")
     public ResultInfo addFavorite(Integer rid){
         return  this.favoriteService.addFavorite(rid);
+    }
+
+    /**
+     * 分页查询我的收藏
+     * @param curPage
+     * @return
+     */
+    @PostMapping("/findFavoriteByPage")
+    public ResultInfo findFavoriteByPage(
+            @RequestParam(value = "curPage",required = false,defaultValue = "1") Integer curPage){
+        return this.favoriteService.findFavoriteByPage(curPage);
     }
 }

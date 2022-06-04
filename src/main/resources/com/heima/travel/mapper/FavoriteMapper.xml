@@ -14,4 +14,22 @@
     <insert id="addFavorite">
         insert into tab_favorite values(#{rid},now(),#{uid});
     </insert>
+
+
+    <resultMap id="favoriteInfoMap" type="Favorite">
+        <result column="date" property="date"/>
+        <association property="route" javaType="Route" autoMapping="true">
+            <id  column="rid" property="rid"/>
+            <result column="rname" property="rname"/>
+        </association>
+    </resultMap>
+    <select id="findFavorites" resultMap="favoriteInfoMap">
+        select * from
+                     tab_favorite as fr,
+                     tab_route as rt
+        where
+            fr.rid = rt.rid
+          and fr.uid = #{uid}
+        order by fr.date desc
+    </select>
 </mapper>

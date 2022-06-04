@@ -8,4 +8,6 @@ public interface FavoriteService {
 
     ResultInfo addFavorite(Integer rid);
 
+    ResultInfo findFavoriteByPage(Integer curPage);
+
 }

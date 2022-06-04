@@ -53,7 +53,15 @@ public class RouteController {
         return this.routeService.findRouteInfoByRid(rid);
     }
 
-    //TODO：前台传过来四个参数，且均为非必须，并且curPage当前页默认为第一页
+    /**
+     * 分页查询收藏排行榜
+     * @param curPage
+     * @param rname
+     * @param startPrice
+     * @param endPrice
+     * @return
+     */
+    //TODO：前台传过来四个参数，且均为非必须，并且curPage当前页默认为第一页，
     @PostMapping("/findRoutesFavoriteRank")
     public ResultInfo findRoutesFavoriteRank(
             @RequestParam(value = "curPage",required = false,defaultValue = "1") Integer curPage,
