@@ -9,4 +9,7 @@ public interface RouteService {
     ResultInfo findRouteList(Integer cid, Integer curPage, String rname);
 
     ResultInfo findRouteInfoByRid(Integer rid);
+
+    ResultInfo findRoutesFavoriteRank(Integer curPage, String rname, Double startPrice, Double endPrice);
+
 }

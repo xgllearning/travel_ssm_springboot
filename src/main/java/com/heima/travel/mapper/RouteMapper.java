@@ -26,4 +26,7 @@ public interface RouteMapper {
      * @return
      */
     Integer findCountByRoutId(Integer rid);
+
+    List<Route> findRoutesFavoriteRank(@Param("rname") String rname,@Param("startPrice") Double startPrice,@Param("endPrice") Double endPrice);
+
 }

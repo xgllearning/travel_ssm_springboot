@@ -73,4 +73,22 @@
     <select id="findCountByRoutId" resultType="int">
         select count from tab_route where rid=#{rid}
     </select>
+
+    <!-- trim自动去掉字符串结尾和开头的空格 -->
+    <select id="findRoutesFavoriteRank" resultType="Route">
+        select * from tab_route
+        <where>
+            rflag='1'
+            <if test="rname!=null and rname.trim!=''">
+                and rname like concat('%',#{rname},'%')
+            </if>
+            <if  test="startPrice!=null">
+                and price &gt;=#{startPrice}
+            </if>
+            <if  test="endPrice!=null">
+                and price &lt;=#{endPrice}
+            </if>
+        </where>
+        order by count desc
+    </select>
 </mapper>

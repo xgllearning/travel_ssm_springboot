@@ -52,4 +52,14 @@ public class RouteController {
     public ResultInfo findRouteByRid(Integer rid){
         return this.routeService.findRouteInfoByRid(rid);
     }
+
+    //TODO：前台传过来四个参数，且均为非必须，并且curPage当前页默认为第一页
+    @PostMapping("/findRoutesFavoriteRank")
+    public ResultInfo findRoutesFavoriteRank(
+            @RequestParam(value = "curPage",required = false,defaultValue = "1") Integer curPage,
+            @RequestParam(value = "rname",required = false) String rname,
+            @RequestParam(value = "startPrice",required = false)  Double startPrice,
+            @RequestParam(value = "endPrice",required = false)  Double endPrice){
+        return  this.routeService.findRoutesFavoriteRank(curPage,rname,startPrice,endPrice);
+    }
 }

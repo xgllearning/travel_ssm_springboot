@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -75,5 +76,30 @@ public class RouteServiceImpl implements RouteService {
             throw new RuntimeException(rid+"对应的旅游路线不存在");
         }
         return new ResultInfo(true,route,null);
+    }
+
+
+    @Override
+    public ResultInfo findRoutesFavoriteRank(Integer curPage, String rname, Double startPrice, Double endPrice) {
+        //使用分页插件实现分页，当前页和每页显示条数
+        PageHelper.startPage(curPage,8);
+        //根据名、最低价格、最高价格向数据库模糊查询
+        List<Route> routes= this.routeMapper.findRoutesFavoriteRank(rname,startPrice,endPrice);
+        if (CollectionUtils.isEmpty(routes)) {
+            //判断查询出来集合是否为空
+            return new ResultInfo(false,"查询不到列表信息");
+        }
+        //插件生成pageInfo信息，传入查出的集合
+        PageInfo<Route> pageInfo = new PageInfo<>(routes);
+        //返回前台pageBean对象，封装好数据
+        PageBean<Route> pageBean = new PageBean<>();
+        pageBean.setTotalPage(pageInfo.getPages());
+        pageBean.setPageSize(pageInfo.getPageSize());
+        pageBean.setPrePage(pageInfo.getPrePage());
+        pageBean.setNextPage(pageInfo.getNextPage());
+        pageBean.setCurPage(pageInfo.getPageNum());
+        pageBean.setData(routes);
+        pageBean.setCount(pageInfo.getTotal());
+        return new ResultInfo(true,pageBean,null);
     }
 }
