@@ -1,8 +1,10 @@
 package com.heima.travel.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.heima.travel.pojo.Route;
 import com.heima.travel.vo.ResultInfo;
 
-public interface RouteService {
+public interface RouteService extends IService<Route> {
 
     ResultInfo routeCareChoose();
 

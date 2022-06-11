@@ -1,54 +1,34 @@
 package com.heima.travel.pojo;
 
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * 收藏实体类
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@TableName("tab_favorite")
 public class Favorite implements Serializable {
+    /**
+     * 在表的联合主键下不能重复使用@TableId注解
+     */
+    @TableField
+    private Integer rid;
+    @TableField
+    private Integer uid;
+    private Date date;//收藏时间
+    @TableField(exist = false)
     private Route route;//旅游线路对象
-    private String date;//收藏时间
+    @TableField(exist = false)
     private User user;//所属用户
-
-    /**
-     * 无参构造方法
-     */
-    public Favorite() {
-    }
-
-    /**
-     * 有参构造方法
-     * @param route
-     * @param date
-     * @param user
-     */
-    public Favorite(Route route, String date, User user) {
-            this.route = route;
-            this.date = date;
-            this.user = user;
-    }
-
-    public Route getRoute() {
-        return route;
-    }
-
-    public void setRoute(Route route) {
-        this.route = route;
-    }
-
-    public String getDate() {
-        return date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
 }

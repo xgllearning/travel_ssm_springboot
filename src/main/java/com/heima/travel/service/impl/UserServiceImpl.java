@@ -1,5 +1,10 @@
 package com.heima.travel.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.heima.travel.exception.BusinessException;
 import com.heima.travel.mapper.UserMapper;
 import com.heima.travel.pojo.User;
@@ -43,10 +48,9 @@ import java.io.IOException;
  4). propagation (传播行为)增删改：REQUIRED (默认值)，只是查询：SUPPORT
  **/
 @Transactional(propagation = Propagation.SUPPORTS,readOnly = true)
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements UserService {
 
-    @Autowired
-    private UserMapper userMapper;
+
 
     @Override
     //因为这个方法中既有插入又有查询，因此重新设置事务，将传播行为改为Propagation.REQUIRED，并可写
@@ -61,8 +65,12 @@ public class UserServiceImpl implements UserService {
             return resultInfo;//结束，返回错误信息
         }
         //2.如果验证码和输入的验证码一致，则查询当前用户是否已经注册，此时需要调用dao层，所以自动装配UserMapper，根据前台传过来的用户名进行查询，查询后返回一个用户信息
-        User dbUser =
-                this.userMapper.findUserByUserName(user.getUsername());
+//        User dbUser =
+//                this.userMapper.findUserByUserName(user.getUsername());
+        LambdaQueryWrapper<User> wrapper = Wrappers.lambdaQuery(User.class);
+        wrapper.eq(User::getUsername,user.getUsername());
+        //因为继承了ServiceImpl，可以直接this.xxx
+        User dbUser = this.getOne(wrapper);
 
         if (dbUser != null) {
             //如果从数据库查询到该用户名信息，说明已经注册过了
@@ -81,7 +89,8 @@ public class UserServiceImpl implements UserService {
         String activeCode = UuidUtil.getUuid();
         user.setCode(activeCode);
         //4.往数据库插入用户信息，通过dao层进行处理
-        this.userMapper.insertUser(user);
+//        this.userMapper.insertUser(user);
+        this.save(user);
 
         //5.发送邮箱
         //5.1 设置正文,到时点击一下会通过get拼接字符串形式将激活码携带给后台，/user/active方法？code参数
@@ -93,8 +102,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public void activeUser(String code) throws IOException {
         //1.激活用户,本质其实是更新status，返回影响行数
-        Integer count= this.userMapper.activeUser(code);
-        if (count>0) {
+//        Integer count= this.userMapper.activeUser(code);
+        LambdaUpdateWrapper<User> updateWrapper = Wrappers.lambdaUpdate(User.class);
+        updateWrapper.eq(User::getCode,code).set(User::getStatus,"Y");
+        boolean flag = this.update(updateWrapper);
+        if (flag) {
             //如果受影响行数大于0，说明激活成功。此时需要资源跳转login.html页面下(一般情况下，是response.redirect重定向到)
             //此时因为没有传过来参数response，使用RequestContextHolder获取，该参数可以获取response\request\session等各种域，功能强大
             RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
@@ -116,7 +128,10 @@ public class UserServiceImpl implements UserService {
             return new ResultInfo(false,"验证码错误");
         }
         //根据用户和密码查询用户是否存在，注意：需要将用户的密码进行MD5加密，否则无法与数据库中的密码进行匹配
-        User dbUser= this.userMapper.findUserByUserNameAndPassword(username,Md5Util.encodeByMd5(password));
+//        User dbUser= this.userMapper.findUserByUserNameAndPassword(username,Md5Util.encodeByMd5(password));
+        LambdaQueryWrapper<User> queryWrapper = Wrappers.lambdaQuery(User.class);
+        queryWrapper.eq(User::getUsername,username).eq(User::getPassword,Md5Util.encodeByMd5(password));
+        User dbUser = this.getOne(queryWrapper);
         if (dbUser==null) {
             return new ResultInfo(false,"用户名或者密码错误");
         }

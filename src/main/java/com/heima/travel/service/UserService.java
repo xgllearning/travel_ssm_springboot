@@ -1,12 +1,13 @@
 package com.heima.travel.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.heima.travel.pojo.User;
 import com.heima.travel.vo.ResultInfo;
 
 import java.io.IOException;
 
 
-public interface UserService {
+public interface UserService extends IService<User> {
     //注册时对验证码进行验证的逻辑接口
     ResultInfo registerUser(User user, String sessionCheckCode, String check);
     //创建userService.activeUser方法

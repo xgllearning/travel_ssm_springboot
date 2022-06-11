@@ -1,0 +1,38 @@
+# 配置服务端口
+server:
+  port: 8080
+
+# 配置数据源
+spring:
+  datasource:
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.zaxxer.hikari.HikariDataSource
+    url: jdbc:mysql://192.168.177.128:3306/travel_ssm?characterEncoding=utf-8&useSSL=false
+  redis:
+    host: localhost
+#    password:
+    port: 6379
+    database: 0
+
+#mybatis-plus配置控制台打印完整带参数SQL语句 开发阶段用；
+mybatis-plus:
+  configuration:
+    #配置日志
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+    # 设置实体类所对应的表的统一前缀
+      table-prefix: tab_
+  type-aliases-package: com.heima.travel.pojo
+
+#
+logging:
+  level:
+    com.heima: debug
+  file:
+    path: D:/log/newlog4j-log.log
+
+
+

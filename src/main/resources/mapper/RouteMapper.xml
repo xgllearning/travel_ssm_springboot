@@ -3,31 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.heima.travel.mapper.RouteMapper">
-    <!--TODO: rflag表示数据库该条数据是否有效，为1时有效，通过order by count desc降序排序，count是人气 -->
-    <select id="popularityRoutes" resultType="Route">
-        select * from tab_route where rflag='1' order by count desc
-    </select>
-    <!--查询日期rdate是最新的前4-->
-    <select id="newRoutes" resultType="Route">
-        select * from tab_route where rflag='1' order by rdate desc
-    </select>
-    <!--TODO:查询是旅游主题且最新的前4，isThemeTour是char类型，所以需要单引号='1'-->
-    <select id="themesRoutes" resultType="Route">
-        select * from tab_route where rflag='1' and isThemeTour='1' order by rdate desc
-    </select>
-    <!--TODO；通过动态sql的方式实现多条件查询-->
-    <select id="findRouteList" resultType="Route">
-        select * from tab_route
-        <where>
-            rflag='1'
-            <if test="cid!=null and cid!=''">
-                and cid=#{cid}
-            </if>
-            <if test="rname!=null">
-                and rname like concat('%',#{rname},'%')
-            </if>
-        </where>
-    </select>
+
     <!--定义map映射-->
     <resultMap id="routeInfoMap" type="Route" autoMapping="true">
         <!--先进行主表映射,开启自动映射后，如果列名与pojo类中属性名称一致，可自动动映射-->
@@ -66,29 +42,4 @@
           and rt.rid = #{rid}
     </select>
 
-    <update id="updateCount">
-        update tab_route set count=count+#{count} where rid=#{rid}
-    </update>
-
-    <select id="findCountByRoutId" resultType="int">
-        select count from tab_route where rid=#{rid}
-    </select>
-
-    <!-- trim自动去掉字符串结尾和开头的空格 -->
-    <select id="findRoutesFavoriteRank" resultType="Route">
-        select * from tab_route
-        <where>
-            rflag='1'
-            <if test="rname!=null and rname.trim!=''">
-                and rname like concat('%',#{rname},'%')
-            </if>
-            <if  test="startPrice!=null">
-                and price &gt;=#{startPrice}
-            </if>
-            <if  test="endPrice!=null">
-                and price &lt;=#{endPrice}
-            </if>
-        </where>
-        order by count desc
-    </select>
 </mapper>

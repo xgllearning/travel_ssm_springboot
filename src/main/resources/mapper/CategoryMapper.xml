@@ -3,8 +3,6 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.heima.travel.mapper.CategoryMapper">
-    <select id="findAllCategory" resultType="Category">
-        select * from tab_category
-    </select>
+
 
 </mapper>
